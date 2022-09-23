@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.min.js "></script>
+    <script type="module" src="./index.js"></script>
+</head>
+
+<body>
+    <h1>数据双向绑定</h1>
+    <input type="text" id="input">
+    <span id="span"></span>
+    <script>
+        const input = document.getElementById('input');
+        const span = document.getElementById('span');
+        const bindObj = {};
+        const handler = {
+            get: function (target, key) {
+                return target[key];
+            },
+            set: function (target, key, value) {
+                if(input.value != value) {
+                    input.value = value
+                }
+                if (key === "text") {
+                    span.innerHTML = value;
+                    return (target[key] = value);
+                }
+            },
+        };
+        const bindObjProxy = new Proxy(bindObj, handler);
+        input.addEventListener("keyup", function (e) {
+            bindObjProxy.text = e.target.value;
+            console.log(bindObjProxy.text);
+        });
+        bindObjProxy.text='tuoluo';
+    </script>
+</body>
+
+</html>
